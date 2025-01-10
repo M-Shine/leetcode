@@ -11,36 +11,35 @@
  * @return {ListNode}
  */
 var addTwoNumbers = function(l1, l2) {
+  const result = new ListNode();
   let overflow = 0;
-  let sumStr = '';
-  do {
-    const itemSum = l1.val + l2.val + overflow;
-    overflow = itemSum > 9 ? 1 : 0;
-    sumStr += itemSum % 10;
-    l1 = l1.next;
-    l2 = l2.next;
-  } while (l1 && l2);
-
-  while (l1) {
-    const itemSum = l1.val + overflow;
-    overflow = itemSum > 9 ? 1 : 0;
-    sumStr += itemSum % 10;
-    l1 = l1.next;
+  let p = result;
+  let p1 = l1;
+  let p2 = l2;
+  while (p1 && p2) {
+    let sum = p1.val + p2.val + overflow;
+    p.next = new ListNode(sum % 10);
+    overflow = Math.floor(sum / 10);
+    p = p.next;
+    p1 = p1.next;
+    p2 = p2.next;
   }
-  while (l2) {
-    const itemSum = l2.val + overflow;
-    overflow = itemSum > 9 ? 1 : 0;
-    sumStr += itemSum % 10;
-    l2 = l2.next;
+  while (p1) {
+    let sum = p1.val + overflow;
+    p.next = new ListNode(sum % 10);
+    overflow = Math.floor(sum / 10);
+    p = p.next;
+    p1 = p1.next;
+  }
+  while (p2) {
+    let sum = p2.val + overflow;
+    p.next = new ListNode(sum % 10);
+    overflow = Math.floor(sum / 10);
+    p = p.next;
+    p2 = p2.next;
   }
   if (overflow) {
-    sumStr += overflow;
+    p.next = new ListNode(overflow);
   }
-
-  let lastNode;
-  [...sumStr].reverse().forEach(str => {
-    const val = parseInt(str, 10);
-    lastNode = new ListNode(val, lastNode);
-  });
-  return lastNode;
+  return result.next;
 };
